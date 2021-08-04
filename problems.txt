@@ -1,0 +1,10 @@
+why won't this work??
+{
+  posts{
+    id
+    body
+    user{
+      name
+    }
+  }
+}
