@@ -17,7 +17,6 @@ interface IFormInput {
 
 const schema = yup.object().shape({
   name: yup.string().required(),
-  role: yup.string().required(),
   password: yup.string().required(),
 });
 
@@ -25,7 +24,7 @@ function Signup() {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [role, setRole] = useState<string>("");
+  const [role, setRole] = useState<string>("General");
   const history = useHistory();
   const [createUser, { error }] = useMutation(CREATE_USER_MUTATION, {
     onCompleted: () => {
@@ -69,7 +68,7 @@ function Signup() {
           }}
         />
 
-        <input
+        {/* <input
           {...register("role")}
           type="text"
           required
@@ -77,7 +76,21 @@ function Signup() {
           onChange={(e) => {
             setRole(e.target.value);
           }}
-        />
+        /> */}
+
+        <select
+          required
+          value={role}
+          onChange={(e) => {
+            setRole(e.target.value);
+          }}
+        >
+          <option value={"General"}>General</option>
+          <option value={"Software Engineer"}>Software Engineer</option>
+          <option value={"Marketing Strategist"}>Marketing Strategist</option>
+          <option value={"UX Designer"}>UX Designer</option>
+          <option value={"Content Specialist"}>Content Specialist</option>
+        </select>
 
         <input
           {...register("email")}

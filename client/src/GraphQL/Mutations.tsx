@@ -40,8 +40,13 @@ export const DELETE_POST_MUTATION = gql`
 `;
 
 export const UPDATE_USER_MUTATION = gql`
-  mutation updateUser($id: String!, $name: String!) {
-    updateUser(id: $id, name: $name)
+  mutation updateUser(
+    $id: String!
+    $name: String!
+    $email: String!
+    $role: String!
+  ) {
+    updateUser(id: $id, name: $name, email: $email, role: $role)
   }
 `;
 

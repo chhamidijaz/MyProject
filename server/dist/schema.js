@@ -16,8 +16,9 @@ const typeDefs = gql `
   }
   type Query {
     user: User
-    users: [User]
-    posts: [Post]
+    anyUser(id: String!): User
+    users(limit: Int!, offset: Int!): [User]
+    posts(limit: Int!, offset: Int!): [Post]
     post(id: String!): Post
     userPosts: [Post]
     anyUserPosts(id: String!): [Post]
@@ -33,7 +34,7 @@ const typeDefs = gql `
       role: String!
     ): String!
     login(email: String!, password: String!): LoginPayload!
-    updateUser(id: String, name: String): String!
+    updateUser(id: String, name: String, email: String, role: String): String!
     deleteUser(id: String): String!
     updatePost(id: String, body: String): String!
     deletePost(id: String): String!

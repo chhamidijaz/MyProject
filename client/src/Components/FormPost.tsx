@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { CREATE_POST_MUTATION } from "../GraphQL/Mutations";
 import { useMutation } from "@apollo/client";
 import "./Form.css";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -27,7 +27,7 @@ const FormPost = () => {
       history.push("/error");
     },
     onCompleted: () => {
-      history.push("/");
+      history.push("/posts");
     },
   });
 
@@ -51,6 +51,14 @@ const FormPost = () => {
   };
   return (
     <div>
+      <Link to="/users">
+        <button className="btn pbtn">All Users</button>
+      </Link>
+      <Link to="/">
+        <button className="btn" style={{ marginRight: "28%" }}>
+          All Posts
+        </button>
+      </Link>
       <h1>Create Post</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <input

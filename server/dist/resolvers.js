@@ -26,7 +26,7 @@ const resolvers = {
         },
         users(root, args, { models }) {
             return __awaiter(this, void 0, void 0, function* () {
-                return models.User.findAll();
+                return models.User.findAll(args);
             });
         },
         userPosts(root, args, { models, user }) {
@@ -48,12 +48,17 @@ const resolvers = {
         },
         posts(root, args, { models }) {
             return __awaiter(this, void 0, void 0, function* () {
-                return models.Post.findAll();
+                return models.Post.findAll(args);
             });
         },
         post(root, { id }, { models }) {
             return __awaiter(this, void 0, void 0, function* () {
                 return yield models.Post.findOne({ where: { id } });
+            });
+        },
+        anyUser(root, { id }, { models }) {
+            return __awaiter(this, void 0, void 0, function* () {
+                return yield models.User.findOne({ where: { id } });
             });
         },
     },
@@ -99,12 +104,14 @@ const resolvers = {
                 });
             });
         },
-        updateUser: (root, { id, name }, { models, user: _user }) => __awaiter(void 0, void 0, void 0, function* () {
+        updateUser: (root, { id, name, email, role }, { models, user: _user }) => __awaiter(void 0, void 0, void 0, function* () {
             if (!_user) {
                 throw new apollo_server_1.AuthenticationError("Invalid");
             }
             const user = yield models.User.update({
                 name,
+                email,
+                role,
             }, { where: { id } });
             var message;
             if (user)

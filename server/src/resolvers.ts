@@ -17,7 +17,7 @@ const resolvers = {
       return models.User.findOne({ where: user.id });
     },
     async users(root: any, args: any, { models }: any) {
-      return models.User.findAll();
+      return models.User.findAll(args);
     },
 
     async userPosts(root: any, args: any, { models, user }: any) {
@@ -36,11 +36,15 @@ const resolvers = {
     },
 
     async posts(root: any, args: any, { models }: any) {
-      return models.Post.findAll();
+      return models.Post.findAll(args);
     },
 
     async post(root: any, { id }: any, { models }: any) {
       return await models.Post.findOne({ where: { id } });
+    },
+
+    async anyUser(root: any, { id }: any, { models }: any) {
+      return await models.User.findOne({ where: { id } });
     },
   },
   Mutation: {
@@ -96,7 +100,7 @@ const resolvers = {
 
     updateUser: async (
       root: any,
-      { id, name }: any,
+      { id, name, email, role }: any,
       { models, user: _user }: any
     ) => {
       if (!_user) {
@@ -105,6 +109,8 @@ const resolvers = {
       const user = await models.User.update(
         {
           name,
+          email,
+          role,
         },
         { where: { id } }
       );

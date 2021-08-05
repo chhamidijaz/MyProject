@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const LOAD_USERS = gql`
-  query {
-    users {
+  query users($limit: Int!, $offset: Int!) {
+    users(limit: $limit, offset: $offset) {
       id
       name
       email
@@ -22,8 +22,8 @@ export const LOAD_USER = gql`
 `;
 
 export const LOAD_POSTS = gql`
-  query {
-    posts {
+  query posts($limit: Int!, $offset: Int!) {
+    posts(limit: $limit, offset: $offset) {
       id
       body
       user {
@@ -66,6 +66,16 @@ export const LOAD_POST = gql`
         id
         name
       }
+    }
+  }
+`;
+
+export const LOAD_ANY_USER = gql`
+  query anyUser($id: String!) {
+    anyUser(id: $id) {
+      name
+      email
+      role
     }
   }
 `;

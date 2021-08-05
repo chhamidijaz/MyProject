@@ -13,13 +13,8 @@ import Paper from "@material-ui/core/Paper";
 import { useHistory, Link } from "react-router-dom";
 
 import "./Posts.css";
-import Pagination from "./Pagination";
-
-const useStyles = makeStyles({
-  table: {
-    minWidth: 650,
-  },
-});
+import { Feed } from "semantic-ui-react";
+import { Button } from "@material-ui/core";
 
 interface UserType {
   id: string;
@@ -33,52 +28,66 @@ interface PostType {
 }
 
 function Posts() {
-  const history = useHistory();
-  const classes = useStyles();
+  const [offset, setoffset] = useState(0);
+  const [limit, setLimit] = useState(4);
   const [posts, setPosts] = useState<PostType[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage] = useState(5);
   const { error, loading, data, refetch } = useQuery(LOAD_POSTS, {
     nextFetchPolicy: "network-only",
+    variables: { limit, offset },
   });
 
   useEffect(() => {
-    // refetch();
+    refetch();
     if (data) {
       setPosts(data.posts);
     }
   }, [data]);
 
-  // Get current posts
-  const indexOfLastPost = currentPage * postsPerPage;
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
-
-  // Change page
-  const paginate = (pageNumber: React.SetStateAction<number>) => {
-    setCurrentPage(pageNumber);
-  };
-
   return (
     <div>
+      {offset != 0 && (
+        <Button
+          color="primary"
+          style={{
+            float: "left",
+            left: "5%",
+          }}
+          onClick={() => setoffset(offset - limit)}
+        >
+          &#171; Previous
+        </Button>
+      )}
+      {posts.length == limit && (
+        <Button
+          color="primary"
+          style={{
+            float: "right",
+            right: "5%",
+          }}
+          onClick={() => {
+            setoffset(offset + limit);
+          }}
+        >
+          Next &#187;
+        </Button>
+      )}
+
+      {!posts.length && <h1>No more posts to show</h1>}
       <h1>All Posts</h1>
       <Link to="/createPost">
         <button className="btn" style={{ marginRight: "28%" }}>
           Create Post
         </button>
       </Link>
-      <Pagination
-        postsPerPage={postsPerPage}
-        totalPosts={posts.length}
-        paginate={paginate}
-      />
-      {currentPosts.map((post) => (
+
+      {posts.map((post) => (
         <article className="art" key={post.id}>
           <div className="body">{post.body}</div>
           <div className="aurther">written by {post.user.name}</div>
         </article>
       ))}
     </div>
+
     // <TableContainer component={Paper}>
     //   <h1>All Posts</h1>
     //   <Link to="/createPost">
