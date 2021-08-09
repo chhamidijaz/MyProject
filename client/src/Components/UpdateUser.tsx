@@ -20,7 +20,7 @@ const UpdateUser = () => {
 
   const [updateUser, { error }] = useMutation(UPDATE_USER_MUTATION, {
     onCompleted: () => {
-      history.push("/");
+      history.push("/users");
     },
   });
 

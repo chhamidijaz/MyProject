@@ -53,16 +53,7 @@ function Login() {
     if (error) {
       console.log(error);
     }
-    if (_data) {
-      debugger;
-      alert("data");
-    }
   };
-  // if (loading) return "...";
-  // if (error) return `Submission error!`;
-  // if (_data) {
-  //   debugger;
-  // }
 
   return (
     <div>

@@ -15,6 +15,7 @@ import GetUsers from "./Components/GetUsers";
 import UserPosts from "./Components/UserPosts";
 import AnyUserPosts from "./Components/AnyUserPosts";
 import UpdatePost from "./Components/UpdatePost";
+import UserProfile from "./Components/UserProfile";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -52,6 +53,15 @@ function App() {
             >
               LOGOUT
             </button>
+            <Link to="/profile">
+              <button
+                onClick={() => {}}
+                className="btn"
+                style={{ float: "right", marginRight: "56%" }}
+              >
+                My profile
+              </button>
+            </Link>
             <Link to="/posts">
               <button
                 onClick={() => {}}
@@ -73,6 +83,7 @@ function App() {
           <Route path="/signup" component={Signup} />
           <Route exact path="/" component={Home} />
           <PrivateRoute path="/createPost" component={FormPost} />
+          <PrivateRoute path="/profile" component={UserProfile} />
           <PrivateRoute exact path="/users" component={GetUsers} />
           <Route path="/error" component={Error} />
           <PrivateRoute path="/posts" component={UserPosts} />

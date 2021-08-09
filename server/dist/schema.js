@@ -15,13 +15,14 @@ const typeDefs = gql `
     user: User!
   }
   type Query {
-    user: User
-    anyUser(id: String!): User
-    users(limit: Int!, offset: Int!): [User]
-    posts(limit: Int!, offset: Int!): [Post]
-    post(id: String!): Post
-    userPosts: [Post]
-    anyUserPosts(id: String!): [Post]
+    user: User!
+    anyUser(id: String!): User!
+    users(limit: Int!, offset: Int!, searchQuery: String): [User]
+    posts(limit: Int!, offset: Int!): [Post]!
+    post(id: String!): Post!
+    userPosts: [Post]!
+    searchUser(name: String!): [User]!
+    anyUserPosts(id: String!): [Post]!
   }
   type LoginPayload {
     token: String

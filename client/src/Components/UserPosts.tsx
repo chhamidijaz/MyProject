@@ -86,7 +86,7 @@ const UserPosts = () => {
                 to={`/update/post/${post?.id}`}
                 style={{ textDecoration: "none" }}
               >
-                <Button color="primary">Update User</Button>
+                <Button color="primary">Update Post</Button>
               </Link>
               <Button
                 color="secondary"
@@ -101,7 +101,7 @@ const UserPosts = () => {
                   }
                 }}
               >
-                Detele User
+                Detele Post
               </Button>
             </article>
           ))}

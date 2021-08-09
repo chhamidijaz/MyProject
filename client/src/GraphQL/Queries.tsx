@@ -14,6 +14,7 @@ export const LOAD_USERS = gql`
 export const LOAD_USER = gql`
   query {
     user {
+      id
       name
       role
       email
@@ -53,6 +54,17 @@ export const LOAD_ANY_User_POSTS = gql`
       user {
         name
       }
+    }
+  }
+`;
+
+export const LOAD_SEARCHED_USER = gql`
+  query searchUser($name: String!) {
+    searchUser(name: $name) {
+      id
+      name
+      email
+      role
     }
   }
 `;

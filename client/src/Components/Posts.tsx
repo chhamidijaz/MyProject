@@ -71,6 +71,18 @@ function Posts() {
           Next &#187;
         </Button>
       )}
+      <span
+        className="pg"
+        style={{
+          color: "red",
+          fontSize: "100%",
+          position: "absolute",
+          right: "17%",
+          top: "17%",
+        }}
+      >
+        Page Number: {offset == 0 ? 1 : offset / limit + 1}
+      </span>
 
       {!posts.length && <h1>No more posts to show</h1>}
       <h1>All Posts</h1>

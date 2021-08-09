@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useQuery, gql, useMutation } from "@apollo/client";
-import { LOAD_USER, LOAD_USERS } from "../GraphQL/Queries";
+import { useQuery, gql, useMutation, useLazyQuery } from "@apollo/client";
+import { LOAD_SEARCHED_USER, LOAD_USER, LOAD_USERS } from "../GraphQL/Queries";
 import Table from "@material-ui/core/Table";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -34,7 +34,9 @@ const GetUsers = () => {
   const classes = useStyles();
   const [users, setUsers] = useState<UserType[]>([]);
   const [userRole, setUserRole] = useState("");
+  const [nameforSearch, setnameforSearch] = useState("");
   const [offset, setoffset] = useState(0);
+  const [len, setLen] = useState(0);
   const [limit, setLimit] = useState(10);
   const { data: userLoggedin, refetch: userRefetch } = useQuery(LOAD_USER, {
     nextFetchPolicy: "network-only",
@@ -44,6 +46,9 @@ const GetUsers = () => {
     nextFetchPolicy: "network-only",
     variables: { limit, offset },
   });
+
+  const [searchUser, { data: searchedData }] = useLazyQuery(LOAD_SEARCHED_USER);
+
   const [deleteUser] = useMutation(DELETE_USER_MUTATION);
 
   const DeleteUser = (id: string) => {
@@ -55,44 +60,83 @@ const GetUsers = () => {
     refetch();
   };
 
+  const search = () => {
+    searchUser({
+      variables: {
+        name: nameforSearch,
+      },
+    });
+  };
+
   useEffect(() => {
     refetch();
-    if (data) {
-      setUserRole(userLoggedin?.user?.role);
-      setUsers(data.users);
+    if (data && nameforSearch.length > 0) {
+      setUsers(searchedData?.searchUser);
+      setLen(searchedData?.searchUser.length);
     }
-  }, [data]);
+    if (data && nameforSearch == "") {
+      setUserRole(userLoggedin?.user?.role);
+      setUsers(data?.users);
+      setLen(data?.users.length);
+    }
+  }, [data, searchedData]);
 
   return (
     <>
-      {offset != 0 && (
-        <Button
-          color="primary"
-          style={{
-            float: "left",
-            left: "5%",
-          }}
-          onClick={() => setoffset(offset - limit)}
-        >
-          &#171; Previous
-        </Button>
+      {nameforSearch.length == 0 && (
+        <div>
+          {offset != 0 && (
+            <Button
+              color="primary"
+              style={{
+                float: "left",
+                left: "5%",
+              }}
+              onClick={() => setoffset(offset - limit)}
+            >
+              &#171; Previous
+            </Button>
+          )}
+          <Button
+            color="primary"
+            style={{
+              float: "right",
+              right: "5%",
+            }}
+            onClick={() => {
+              setoffset(offset + limit);
+            }}
+          >
+            Next &#187;
+          </Button>
+          <span
+            className="pg"
+            style={{
+              color: "red",
+              fontSize: "100%",
+              position: "absolute",
+              right: "17%",
+              top: "17%",
+            }}
+          >
+            Page Number: {offset == 0 ? 1 : offset / limit + 1}
+          </span>
+        </div>
       )}
-      {users.length == limit && (
-        <Button
-          color="primary"
-          style={{
-            float: "right",
-            right: "5%",
-          }}
-          onClick={() => {
-            setoffset(offset + limit);
-          }}
-        >
-          Next &#187;
-        </Button>
-      )}
-      {!users.length && <h1>No more posts to show</h1>}
 
+      <div className="searchForm" style={{ float: "left", width: "20%" }}>
+        <input
+          style={{ width: "80%" }}
+          placeholder="Search for..."
+          type="text"
+          onChange={(e) => {
+            setnameforSearch(e.target.value);
+          }}
+        />
+        <button style={{ width: "20%" }} onClick={search}>
+          search
+        </button>
+      </div>
       <TableContainer component={Paper}>
         <Link to="/">
           <button className="btn pbtn">All Posts</button>
@@ -108,9 +152,6 @@ const GetUsers = () => {
           <TableHead>
             <TableRow>
               <TableCell>
-                <strong style={{ fontSize: "130%" }}>ID</strong>
-              </TableCell>
-              <TableCell>
                 <strong style={{ fontSize: "130%" }}>Name</strong>
               </TableCell>
               <TableCell>
@@ -122,11 +163,8 @@ const GetUsers = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {users.map((user) => (
+            {users?.map((user) => (
               <TableRow key={user.id}>
-                <TableCell component="th" scope="row">
-                  {user.id}
-                </TableCell>
                 <TableCell>{user.name}</TableCell>
                 <TableCell>{user.email}</TableCell>
                 <TableCell>{user.role}</TableCell>

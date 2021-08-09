@@ -22,7 +22,7 @@
     "sequelize-cli": "^6.2.0"
   },
   "scripts": {
-    "start":"tsc && node graphql.js",
+    "start": "tsc && nodemon ./dist/graphql.js",
     "start:dev": "npm run build:dev",
     "build:dev": "nodemon 'src/graphql.ts' --exec 'ts-node' src/graphql.ts -e ts,graphql",
     "test": "echo \"Error: no test specified\" && exit 1"

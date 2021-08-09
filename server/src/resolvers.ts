@@ -1,7 +1,5 @@
 import { ApolloError, AuthenticationError } from "apollo-server";
-import { Console } from "console";
-
-export {};
+import { Op } from "sequelize";
 
 require("dotenv").config();
 const bcrypt = require("bcrypt");
@@ -17,7 +15,7 @@ const resolvers = {
       return models.User.findOne({ where: user.id });
     },
     async users(root: any, args: any, { models }: any) {
-      return models.User.findAll(args);
+      return models.User.findAll({ ...args, order: [["id", "ASC"]] });
     },
 
     async userPosts(root: any, args: any, { models, user }: any) {
@@ -35,8 +33,18 @@ const resolvers = {
       });
     },
 
+    async searchUser(root: any, { name }: any, { models }: any) {
+      return models.User.findAll({
+        where: {
+          name: {
+            [Op.iLike]: `%${name}%`,
+          },
+        },
+      });
+    },
+
     async posts(root: any, args: any, { models }: any) {
-      return models.Post.findAll(args);
+      return models.Post.findAll({ ...args, order: [["id", "ASC"]] });
     },
 
     async post(root: any, { id }: any, { models }: any) {

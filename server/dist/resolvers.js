@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const apollo_server_1 = require("apollo-server");
+const sequelize_1 = require("sequelize");
 require("dotenv").config();
 const bcrypt = require("bcrypt");
 const { User } = require("./models");
@@ -26,7 +27,7 @@ const resolvers = {
         },
         users(root, args, { models }) {
             return __awaiter(this, void 0, void 0, function* () {
-                return models.User.findAll(args);
+                return models.User.findAll(Object.assign(Object.assign({}, args), { order: [["id", "ASC"]] }));
             });
         },
         userPosts(root, args, { models, user }) {
@@ -46,9 +47,20 @@ const resolvers = {
                 });
             });
         },
+        searchUser(root, { name }, { models }) {
+            return __awaiter(this, void 0, void 0, function* () {
+                return models.User.findAll({
+                    where: {
+                        name: {
+                            [sequelize_1.Op.iLike]: `%${name}%`,
+                        },
+                    },
+                });
+            });
+        },
         posts(root, args, { models }) {
             return __awaiter(this, void 0, void 0, function* () {
-                return models.Post.findAll(args);
+                return models.Post.findAll(Object.assign(Object.assign({}, args), { order: [["id", "ASC"]] }));
             });
         },
         post(root, { id }, { models }) {
